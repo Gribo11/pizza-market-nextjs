@@ -1,4 +1,4 @@
-import { Container, Filters, ProductCard, Title, TopBar } from "@/components/shared/index";
+import { Container, Filters, ProductCard, ProductListGroup, Title, TopBar } from "@/components/shared/index";
 
 export default function Home() {
   return (
@@ -18,8 +18,64 @@ export default function Home() {
 
         <div className="flex-1">
           <div className="flex flex-col gap-16">
-            <ProductCard id={1} name='text' price={500} imageUrl="https://media.dodostatic.net/image/r:292x292/11EEFB595A197C24BA932A0AD1144AFB.jpg"/>
+            <ProductListGroup title="Pizza" items={[{
+              id:1,
+              name:'Text',
+              imageUrl:"https://media.dodostatic.net/image/r:292x292/11EEFB595A197C24BA932A0AD1144AFB.jpg",
+              price:500,
+              items:[{price:500}]
+            },
+            {
+              id:2,
+              name:'Text',
+              imageUrl:"https://media.dodostatic.net/image/r:292x292/11EEFB595A197C24BA932A0AD1144AFB.jpg",
+              price:500,
+              items:[{price:500}]
+            },
+            {
+              id:3,
+              name:'Text',
+              imageUrl:"https://media.dodostatic.net/image/r:292x292/11EEFB595A197C24BA932A0AD1144AFB.jpg",
+              price:500,
+              items:[{price:500}]
+            },
+            {
+              id:4,
+              name:'Text',
+              imageUrl:"https://media.dodostatic.net/image/r:292x292/11EEFB595A197C24BA932A0AD1144AFB.jpg",
+              price:500,
+              items:[{price:500}]
+            }]} categoryId={1}/>
+             <ProductListGroup title="Combo" items={[{
+              id:1,
+              name:'Text',
+              imageUrl:"https://media.dodostatic.net/image/r:292x292/11EEFB595A197C24BA932A0AD1144AFB.jpg",
+              price:500,
+              items:[{price:500}]
+            },
+            {
+              id:2,
+              name:'Text',
+              imageUrl:"https://media.dodostatic.net/image/r:292x292/11EEFB595A197C24BA932A0AD1144AFB.jpg",
+              price:500,
+              items:[{price:500}]
+            },
+            {
+              id:3,
+              name:'Text',
+              imageUrl:"https://media.dodostatic.net/image/r:292x292/11EEFB595A197C24BA932A0AD1144AFB.jpg",
+              price:500,
+              items:[{price:500}]
+            },
+            {
+              id:4,
+              name:'Text',
+              imageUrl:"https://media.dodostatic.net/image/r:292x292/11EEFB595A197C24BA932A0AD1144AFB.jpg",
+              price:500,
+              items:[{price:500}]
+            }]} categoryId={2}/>
           </div>
+          
         </div>
 
         </div>
