@@ -1,127 +1,124 @@
-'use client';
+"use client";
 
+import { useIngredients } from "@/hooks/use-ingridients";
 import React from "react";
 import { Input } from "../ui/input";
 import { CheckboxFiltersGroup } from "./checkbox-filters-group";
 import { FilterCheckbox } from "./filter-checkbox";
 import { RangeSlider } from "./range-slider";
 import { Title } from "./title";
+import {useSet} from 'react-use';
 
 interface Props {
   className?: string;
 }
 
+interface PriseProps {
+  priceFrom: number;
+  priceTo: number;
+}
+
 export const Filters: React.FC<Props> = ({ className }) => {
+  const { ingredients, loading, ondAddId, selectedIngredients } = useIngredients();
+  const [sizes, { toggle: toggleSize}] = useSet(new Set<string>([]));
+  const [pizzaTypes, { toggle: togglePizzaTypes}] = useSet(new Set<string>([]));
+
+  const [prices, setPrice] = React.useState<PriseProps>({
+    priceFrom: 0,
+    priceTo: 1000,
+  });
+
+  const items = ingredients.map((item) => ({
+    value: String(item.id),
+    text: item.name,
+  }));
+
+  const updatePrice = (name: keyof PriseProps, value: number) => {
+    setPrice({
+      ...prices,
+      [name]: value,
+    });
+  };
+
+  React.useEffect(() => {
+   console.log({prices, sizes, pizzaTypes, selectedIngredients});
+  }, [prices, sizes, pizzaTypes, selectedIngredients]);
+
   return (
     <div className={className}>
       <Title text="Filters" size="sm" className="mb-5 font-bold" />
 
-      <div className="flex flex-col gap-4">
-        <FilterCheckbox text="Can make" value="2" />
-        <FilterCheckbox text="New" value="1" />
-      </div>
+      <CheckboxFiltersGroup
+        title="Type of dough"
+        name="pizzaTypes"
+        className="mb-5"
+        onClickCheckbox={togglePizzaTypes}
+        selected={pizzaTypes}
+        loading={loading}
+        items={[
+          { text: 'Slim', value: '1' },
+          { text: 'Traditional', value: '2' },
+        ]}
+      />
+
+      <CheckboxFiltersGroup
+        title="Sizes"
+        name="sizes"
+        className="mb-5"
+        limit={6}
+        items={[
+          { text: '20 см', value: '20' },
+          { text: '30 см', value: '30' },
+          { text: '40 см', value: '40' },
+        ]}
+        loading={loading}
+        onClickCheckbox={toggleSize}
+        selected={sizes}
+      />
+      
       <div className="mt-5 border-y border-y-neutral-100 py-6 pb-7">
         <p className="font-bold mb-3">Цена от и до:</p>
         <div className="flex gap-3 mb-5">
-          <Input type="number" placeholder="0" min={0} max={1000} />
-          <Input type="number" min={100} max={1000} placeholder="1000" />
+          <Input
+            type="number"
+            placeholder="0"
+            min={0}
+            max={1000}
+            value={String(prices.priceFrom)}
+            onChange={(e) => updatePrice("priceFrom", Number(e.target.value))}
+          />
+          <Input
+            type="number"
+            min={100}
+            max={1000}
+            placeholder="1000"
+            value={String(prices.priceTo)}
+            onChange={(e) => updatePrice("priceTo", Number(e.target.value))}
+          />
         </div>
-        <RangeSlider min={0} max={1000} step={10} value={[0, 5000]} />
+        <RangeSlider
+          min={0}
+          max={1000}
+          step={10}
+          value={[prices.priceFrom, prices.priceTo]}
+          onValueChange={([priceFrom, priceTo]) =>
+            setPrice({ priceFrom, priceTo })
+          }
+        />
       </div>
-
 
       <CheckboxFiltersGroup
         title="Ингредиенты"
         name="ingredients"
         className="mt-5"
         limit={6}
-        defaultItems={[
-          {
-            "text": "Thin Crust",
-            "value": "1"
-          },
-          {
-            "text": "Traditional Crust",
-            "value": "2"
-          },
-          {
-            "text": "Cheese Lovers",
-            "value": "3"
-          },
-          {
-            "text": "Pepperoni Feast",
-            "value": "4"
-          },
-          {
-            "text": "Vegetarian",
-            "value": "5"
-          },
-    
-        ]}
-        items={[
-          {
-            "text": "Thin Crust",
-            "value": "1"
-          },
-          {
-            "text": "Traditional Crust",
-            "value": "2"
-          },
-          {
-            "text": "Cheese Lovers",
-            "value": "3"
-          },
-          {
-            "text": "Pepperoni Feast",
-            "value": "4"
-          },
-          {
-            "text": "Vegetarian",
-            "value": "5"
-          },
-          {
-            "text": "Meat Lovers",
-            "value": "6"
-          },
-          {
-            "text": "BBQ Chicken",
-            "value": "7"
-          },
-          {
-            "text": "Hawaiian",
-            "value": "8"
-          },
-          {
-            "text": "Buffalo Chicken",
-            "value": "9"
-          },
-          {
-            "text": "Supreme",
-            "value": "10"
-          },
-          {
-            "text": "Margherita",
-            "value": "11"
-          },
-          {
-            "text": "Four Cheese",
-            "value": "12"
-          },
-          {
-            "text": "Seafood Delight",
-            "value": "13"
-          },
-          {
-            "text": "Spicy Italian",
-            "value": "14"
-          },
-          {
-            "text": "Mushroom & Truffle",
-            "value": "15"
-          }
-        ]}
-       
+        defaultItems={items.slice(0, 6)}
+        items={items}
+        loading={loading}
+        onClickCheckbox={ondAddId}
+        selected={selectedIngredients}
       />
     </div>
   );
 };
+

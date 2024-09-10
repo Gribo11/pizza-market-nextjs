@@ -3,7 +3,7 @@ import Link from "@/node_modules/next/link";
 import Image from "next/image";
 import React from "react";
 import { Button } from "../ui/index";
-import { Container } from "./index";
+import { Container, SearchInput } from "./index";
 import { User, ShoppingCart, ArrowRight } from "lucide-react";
 
 interface Props {
@@ -25,6 +25,10 @@ export const Header: React.FC<Props> = ({ className }) => {
             </div>
           </div>
         </Link>
+
+        <div className="mx-10 flex-1">
+            <SearchInput />
+          </div>
 
         <div className="flex items-center gap-3">
           <Button variant="outline" className="flex items-center gap-1">
