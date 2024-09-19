@@ -8,6 +8,7 @@ import { Category } from "@prisma/client";
 interface Props {
   items: Category[];
   className?: string;
+  
 }
 
 export const Categories: React.FC<Props> = ({items, className }) => {
