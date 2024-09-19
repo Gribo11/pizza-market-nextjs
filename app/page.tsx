@@ -1,13 +1,32 @@
-import { Container, Filters, ProductCard, ProductListGroup, Title, TopBar } from "@/components/shared/index";
+import {
+  Container,
+  Filters,
+  ProductCard,
+  ProductListGroup,
+  Title,
+  TopBar,
+} from "@/components/shared/index";
+import { prisma } from "@/prisma/prisma-client";
 
-export default function Home() {
+export default async function Home() {
+  const categories = await prisma.category.findMany({
+    include: {
+      products: {
+        include: {
+          ingredients: true,
+          items: true,
+        },
+      },
+    },
+  });
+
   return (
     <>
       <Container className="mt-10">
         <Title text="All pizzas" />
       </Container>
 
-      <TopBar />
+      <TopBar  categories={categories.filter((category) => category.products.length > 0)}/>
 
       <Container className="mt-14 pb-14">
         <div className="flex gap-[60px]">
@@ -15,71 +34,23 @@ export default function Home() {
             <Filters />
           </div>
 
-
-        <div className="flex-1">
-          <div className="flex flex-col gap-16">
-            <ProductListGroup title="Pizza" items={[{
-              id:1,
-              name:'Text',
-              imageUrl:"https://media.dodostatic.net/image/r:292x292/11EEFB595A197C24BA932A0AD1144AFB.jpg",
-              price:500,
-              items:[{price:500}]
-            },
-            {
-              id:2,
-              name:'Text',
-              imageUrl:"https://media.dodostatic.net/image/r:292x292/11EEFB595A197C24BA932A0AD1144AFB.jpg",
-              price:500,
-              items:[{price:500}]
-            },
-            {
-              id:3,
-              name:'Text',
-              imageUrl:"https://media.dodostatic.net/image/r:292x292/11EEFB595A197C24BA932A0AD1144AFB.jpg",
-              price:500,
-              items:[{price:500}]
-            },
-            {
-              id:4,
-              name:'Text',
-              imageUrl:"https://media.dodostatic.net/image/r:292x292/11EEFB595A197C24BA932A0AD1144AFB.jpg",
-              price:500,
-              items:[{price:500}]
-            }]} categoryId={1}/>
-             <ProductListGroup title="Combo" items={[{
-              id:1,
-              name:'Text',
-              imageUrl:"https://media.dodostatic.net/image/r:292x292/11EEFB595A197C24BA932A0AD1144AFB.jpg",
-              price:500,
-              items:[{price:500}]
-            },
-            {
-              id:2,
-              name:'Text',
-              imageUrl:"https://media.dodostatic.net/image/r:292x292/11EEFB595A197C24BA932A0AD1144AFB.jpg",
-              price:500,
-              items:[{price:500}]
-            },
-            {
-              id:3,
-              name:'Text',
-              imageUrl:"https://media.dodostatic.net/image/r:292x292/11EEFB595A197C24BA932A0AD1144AFB.jpg",
-              price:500,
-              items:[{price:500}]
-            },
-            {
-              id:4,
-              name:'Text',
-              imageUrl:"https://media.dodostatic.net/image/r:292x292/11EEFB595A197C24BA932A0AD1144AFB.jpg",
-              price:500,
-              items:[{price:500}]
-            }]} categoryId={2}/>
+          <div className="flex-1">
+            <div className="flex flex-col gap-16">
+              {categories.map(
+                (category) =>
+                  category.products.length > 0 && (
+                    <ProductListGroup
+                      key={category.id}
+                      title={category.name}
+                      categoryId={category.id}
+                      items={category.products}
+                    />
+                  )
+              )}
+            </div>
           </div>
-          
         </div>
-
-        </div>
-      </Container>  
+      </Container>
     </>
   );
 }
